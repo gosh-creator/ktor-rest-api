@@ -4,13 +4,18 @@ import com.models.City
 import com.models.CreateCityRequest
 import com.repositories.CityRepository
 
-class CityService(private val cityRepository: CityRepository = CityRepository()) {
+class CityService(private val cityRepository: CityRepository) {
 
     fun getAll() : List<City> = cityRepository.findAll()
 
     fun getById(id : Int) : City? = cityRepository.findById(id)
 
-    fun create(city : CreateCityRequest) : City = cityRepository.create(city)
+    fun create(city : CreateCityRequest) : City {
+        require(city.name.isNotBlank()) { "Name cannot be blank" }
+        require(city.country.isNotBlank()) { "Country cannot be blank" }
+        require(city.population > 0) { "Population cannot be zero" }
+        return cityRepository.create(city)
+    }
 
     fun delete (id : Int) : Boolean = cityRepository.delete(id)
 }

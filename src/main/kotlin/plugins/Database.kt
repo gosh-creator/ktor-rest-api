@@ -1,6 +1,7 @@
 package com.plugins
 
 import com.models.CityTable
+import com.models.UserTable
 import io.ktor.server.application.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -20,6 +21,6 @@ fun Application.configureDatabase() {
     )
 
     transaction {
-        SchemaUtils.create(CityTable)
+        SchemaUtils.create(CityTable, UserTable)
     }
 }

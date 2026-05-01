@@ -10,9 +10,10 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import org.koin.ktor.ext.inject
 
 fun Route.cityRoutes() {
-    val service = CityService()
+    val service : CityService by inject()
 
     get("/cities") {
         call.respond(service.getAll())

@@ -1,5 +1,6 @@
 package com
 
+import com.plugins.configureDI
 import io.ktor.server.application.*
 import com.plugins.configureSerialization
 import com.plugins.configureDatabase
@@ -11,6 +12,7 @@ fun main(args : Array<String>) {
 }
 
 fun Application.module() {
+    configureDI()
     configureSerialization()
     configureErrors()
     configureDatabase()

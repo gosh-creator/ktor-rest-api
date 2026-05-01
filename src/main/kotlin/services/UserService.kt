@@ -1,19 +1,23 @@
 package com.services
 
 import com.models.CreateUserRequest
-import com.models.User
 import com.models.UserResponse
 import com.repositories.UserRepository
-import org.h2.command.ddl.CreateUser
-import org.jetbrains.exposed.sql.transactions.transaction
 
-class UserService(private val userRepository: UserRepository = UserRepository()) {
+class UserService(private val userRepository: UserRepository) {
 
-    fun getUsers() : List<User> = userRepository.findAll()
+    fun findAll(): List<UserResponse> = userRepository.findAll()
+        .map { UserResponse(it.id, it.name, it.email) }
 
-    fun getUserById(id : Int) : User? = userRepository.findById(id)
+    fun findById(id: Int): UserResponse? = userRepository.findById(id)
+        ?.let { UserResponse(it.id, it.name, it.email) }
 
-    fun create(user : CreateUserRequest) : UserResponse = userRepository.create(user)
+    fun create(user: CreateUserRequest): UserResponse {
+        require(user.name.isNotBlank()) { "Username cannot be blank" }
+        require(user.email.isNotBlank()) { "User email cannot be blank" }
+        require(user.hashPassword.isNotBlank()) { "Password cannot be blank" }
+        return userRepository.create(user)
+    }
 
-    fun delete (id : Int) : Boolean = userRepository.delete(id)
+    fun delete(id: Int): Boolean = userRepository.delete(id)
 }
