@@ -1,6 +1,7 @@
 package com.routes
 
 import com.models.City
+import com.models.CreateCityRequest
 import com.services.CityService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.request.receive
@@ -19,26 +20,26 @@ fun Route.cityRoutes() {
 
     get("/cities/{id}") {
         val id = call.parameters["id"] ?.toIntOrNull()
-            ?: return@get call.respond(HttpStatusCode.BadRequest, "Invalid id")
+            ?: throw IllegalArgumentException("ID must be a number")
 
         val city = service.getById(id)
-            ?: return@get call.respond(HttpStatusCode.NotFound, "City not found")
+            ?: throw NoSuchElementException("City with id $id not found")
 
         call.respond(city)
     }
 
     post("/cities") {
-        val city = call.receive<City>()
+        val city = call.receive<CreateCityRequest>()
         val created = service.create(city)
         call.respond(HttpStatusCode.Created, created)
     }
 
     delete("/cities/{id}") {
         val id = call.parameters["id"]?.toIntOrNull()
-            ?: return@delete call.respond(HttpStatusCode.BadRequest, "Invalid id")
+            ?: throw IllegalArgumentException("ID must be a number")
 
         val deleted = service.delete(id)
-        if (deleted) call.respond(HttpStatusCode.NoContent)
-        else call.respond(HttpStatusCode.NotFound, "City not found")
+        if (!deleted) throw NoSuchElementException("City with id $id not found")
+        call.respond(HttpStatusCode.NoContent)
     }
 }

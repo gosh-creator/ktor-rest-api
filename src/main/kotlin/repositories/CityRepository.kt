@@ -2,6 +2,7 @@ package com.repositories
 
 import com.models.City
 import com.models.CityTable
+import com.models.CreateCityRequest
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -19,13 +20,19 @@ class CityRepository {
             .singleOrNull()
     }
 
-    fun create(city : City) : City = transaction {
+    fun create(city : CreateCityRequest) : City = transaction {
         val id = CityTable.insertAndGetId {
             it[name] = city.name
             it[country] = city.country
             it[population] = city.population
         }
-        city.copy(id = id.value)
+
+        City(
+            id = id.value,
+            name = city.name,
+            country = city.country,
+            population = city.population
+        )
     }
 
     fun delete (id : Int) : Boolean = transaction {

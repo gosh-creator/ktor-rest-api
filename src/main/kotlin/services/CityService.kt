@@ -1,6 +1,7 @@
 package com.services
 
 import com.models.City
+import com.models.CreateCityRequest
 import com.repositories.CityRepository
 
 class CityService(private val cityRepository: CityRepository = CityRepository()) {
@@ -9,7 +10,7 @@ class CityService(private val cityRepository: CityRepository = CityRepository())
 
     fun getById(id : Int) : City? = cityRepository.findById(id)
 
-    fun create(city : City) : City = cityRepository.create(city)
+    fun create(city : CreateCityRequest) : City = cityRepository.create(city)
 
     fun delete (id : Int) : Boolean = cityRepository.delete(id)
 }

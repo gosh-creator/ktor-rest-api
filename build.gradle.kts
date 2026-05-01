@@ -32,6 +32,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.61.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.61.0")
 
+    implementation(ktorLibs.server.swagger)
+    implementation(ktorLibs.server.statusPages)
+
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
 }
