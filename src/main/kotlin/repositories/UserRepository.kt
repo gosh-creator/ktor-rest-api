@@ -4,6 +4,8 @@ import com.models.CreateUserRequest
 import com.models.User
 import com.models.UserResponse
 import com.models.UserTable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
@@ -13,33 +15,36 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class UserRepository {
 
-    fun findAll() : List<User> = transaction {
-        UserTable.selectAll().map { it.toUser() }
-    }
-
-    fun findById(id : Int) : User? = transaction {
-        UserTable.selectAll()
-            .where { UserTable.id eq id}
-            .map { it.toUser() }
-            .singleOrNull()
-    }
-
-    fun create(user : CreateUserRequest) : UserResponse = transaction {
-        val id = UserTable.insertAndGetId {
-            it[name] = user.name
-            it[email] = user.email
-            it[hashPassword] = user.hashPassword
+    suspend fun findAll(): List<User> = withContext(Dispatchers.IO) {
+        transaction {
+            UserTable.selectAll().map { it.toUser() }
         }
-
-        UserResponse (
-            id = id.value,
-            name = user.name,
-            email = user.email,
-        )
     }
 
-    fun delete(id : Int) : Boolean = transaction {
-        UserTable.deleteWhere { UserTable.id eq id } > 0
+    suspend fun findById(id: Int): User? = withContext(Dispatchers.IO) {
+        transaction {
+            UserTable.selectAll()
+                .where { UserTable.id eq id }
+                .map { it.toUser() }
+                .singleOrNull()
+        }
+    }
+
+    suspend fun create(user: CreateUserRequest): UserResponse = withContext(Dispatchers.IO) {
+        transaction {
+            val id = UserTable.insertAndGetId {
+                it[name] = user.name
+                it[email] = user.email
+                it[hashPassword] = user.hashPassword
+            }
+            UserResponse(id = id.value, name = user.name, email = user.email)
+        }
+    }
+
+    suspend fun delete(id: Int): Boolean = withContext(Dispatchers.IO) {
+        transaction {
+            UserTable.deleteWhere { UserTable.id eq id } > 0
+        }
     }
 
     private fun ResultRow.toUser() : User = User(
