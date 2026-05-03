@@ -38,6 +38,13 @@ dependencies {
     implementation(ktorLibs.server.swagger)
     implementation(ktorLibs.server.statusPages)
 
+    implementation(ktorLibs.server.auth)
+    implementation(ktorLibs.server.auth.jwt)
+
+    testImplementation(ktorLibs.server.testHost)
+    testImplementation(ktorLibs.client.contentNegotiation)
+    testImplementation("io.insert-koin:koin-test:4.0.4")
+
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
 }

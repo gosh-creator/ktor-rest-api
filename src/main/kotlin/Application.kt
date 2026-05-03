@@ -1,5 +1,6 @@
 package com
 
+import com.plugins.configureAuth
 import com.plugins.configureDI
 import io.ktor.server.application.*
 import com.plugins.configureSerialization
@@ -13,6 +14,7 @@ fun main(args : Array<String>) {
 
 fun Application.module() {
     configureDI()
+    configureAuth()
     configureSerialization()
     configureErrors()
     configureDatabase()
