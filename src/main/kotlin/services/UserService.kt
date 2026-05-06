@@ -16,7 +16,8 @@ class UserService(private val userRepository: UserRepository) {
         require(user.name.isNotBlank()) { "Username cannot be blank" }
         require(user.email.isNotBlank()) { "User email cannot be blank" }
         require(user.hashPassword.isNotBlank()) { "Password cannot be blank" }
-        return userRepository.create(user)
+        val created = userRepository.create(user)
+        return UserResponse(created.id, created.name, created.email)
     }
 
     suspend fun delete(id: Int): Boolean = userRepository.delete(id)

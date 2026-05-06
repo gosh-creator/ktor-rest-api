@@ -2,7 +2,6 @@ package com.repositories
 
 import com.models.CreateUserRequest
 import com.models.User
-import com.models.UserResponse
 import com.models.UserTable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,14 +29,14 @@ class UserRepository {
         }
     }
 
-    suspend fun create(user: CreateUserRequest): UserResponse = withContext(Dispatchers.IO) {
+    suspend fun create(user: CreateUserRequest): User = withContext(Dispatchers.IO) {
         transaction {
             val id = UserTable.insertAndGetId {
                 it[name] = user.name
                 it[email] = user.email
                 it[hashPassword] = user.hashPassword
             }
-            UserResponse(id = id.value, name = user.name, email = user.email)
+            User(id = id.value, name = user.name, email = user.email, hashPassword = user.hashPassword)
         }
     }
 
