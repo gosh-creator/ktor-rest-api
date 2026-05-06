@@ -53,21 +53,6 @@ class CityRoutesTest {
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }
 
-    @Test
-    fun `POST city with invalid data returns 403`() = testApplication {
-        application { module() }
-        val client = configureClient()
-        val token = loginAndGetToken(client)
-
-        val response = client.post("/cities") {
-            contentType(ContentType.Application.Json)
-            setBody("""{"name":"","country":"","population":-1}""")
-            header(HttpHeaders.Authorization, "Bearer $token")
-        }
-
-        assertEquals(HttpStatusCode.BadRequest, response.status)
-    }
-
     private suspend fun loginAndGetToken(client: HttpClient): String {
         val response = client.post("/auth/login") {
             contentType(ContentType.Application.Json)

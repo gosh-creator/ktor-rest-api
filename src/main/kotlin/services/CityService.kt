@@ -6,9 +6,9 @@ import com.repositories.CityRepository
 
 class CityService(private val cityRepository: CityRepository) {
 
-    suspend fun getAll() : List<City> = cityRepository.findAll()
+    suspend fun findAll() : List<City> = cityRepository.findAll()
 
-    suspend fun getById(id : Int) : City? = cityRepository.findById(id)
+    suspend fun findById(id : Int) : City? = cityRepository.findById(id)
 
     suspend fun create(city : CreateCityRequest) : City {
         require(city.name.isNotBlank()) { "Name cannot be blank" }
