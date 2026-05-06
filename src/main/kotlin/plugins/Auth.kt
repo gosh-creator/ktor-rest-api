@@ -7,8 +7,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 
 fun Application.configureAuth() {
-    val secret = "super-puper-secret-key"
-    val issuer = "ktor-app"
+    val secret = environment.config.propertyOrNull("jwt.secret")?.getString() ?: "super-puper-secret-key"
+    val issuer = environment.config.propertyOrNull("jwt.issuer")?.getString() ?: "ktor-app"
 
     install(Authentication) {
         jwt("auth-jwt") {

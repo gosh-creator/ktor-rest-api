@@ -13,8 +13,8 @@ import java.util.Date
 
 fun Route.authRoutes() {
     val userService by inject<UserService>()
-    val secret = "my-secret-key"
-    val issuer = "ktor-app"
+    val secret = application.environment.config.propertyOrNull("jwt.secret")?.getString() ?: "super-puper-secret-key"
+    val issuer = application.environment.config.propertyOrNull("jwt.issuer")?.getString() ?: "ktor-app"
 
     post("/auth/register") {
         val request = call.receive<CreateUserRequest>()
