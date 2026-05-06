@@ -16,14 +16,14 @@ fun Route.cityRoutes() {
     val service : CityService by inject()
 
     get("/cities") {
-        call.respond(service.getAll())
+        call.respond(service.findAll())
     }
 
     get("/cities/{id}") {
         val id = call.parameters["id"] ?.toIntOrNull()
             ?: throw IllegalArgumentException("ID must be a number")
 
-        val city = service.getById(id)
+        val city = service.findById(id)
             ?: throw NoSuchElementException("City with id $id not found")
 
         call.respond(city)
