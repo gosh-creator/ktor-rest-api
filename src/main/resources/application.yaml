@@ -4,3 +4,7 @@ ktor:
   application:
     modules:
       - com.ApplicationKt.module
+
+jwt:
+  secret: "super-puper-secret-key"
+  issuer: "ktor-app"
